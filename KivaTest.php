@@ -14,6 +14,7 @@ class KivaTest extends TestCase {
 			'name'                    => 'Shifaa',
 			'status'                  => 'fundraising',
 			'loan_amount'             => 1025,
+			'funded_amount'			  => 400,
 			'planned_expiration_date' => 'September 7 2017 01:00:00 AM'
 
 		], 
@@ -21,26 +22,38 @@ class KivaTest extends TestCase {
 			'name'                    => 'Alice',
 			'status'                  => 'fundraising',
 			'loan_amount'             => 400,
+			'funded_amount'           => 100,
 			'planned_expiration_date' => 'September 7 2017 04:05:00 PM'
 		],
 		[
 			'name'                    => "Dung's Group",
 			'status'                  => 'fundraising',
 			'loan_amount'             => 2650,
+			'funded_amount'           => 350,
 			'planned_expiration_date' => 'September 7 2017 06:09:05 AM'
 		],
 		[
 			'name'                    => 'Kaneez Bb',
 			'status'                  => 'fundraising',
 			'loan_amount'             => 475,
+			'funded_amount'           => 200,
 			'planned_expiration_date' => 'September 7 2017 11:48:00 PM'
 		],
 		[
 			'name'                    => 'Veronicaa',
 			'status'                  => 'funded',
 			'loan_amount'             => 600,
+			'funded_amount'           => 600,
 			'planned_expiration_date' => 'September 8 2017 05:00:00PM'
 		]
+	];
+
+	//these are the amounts remaining for the respective loans, this will be used in testAmuntRemaining
+	public $amount_remaining = [
+		625, //amount remaining for first loan
+		300, //second loan
+		2300, //and so on...
+		275
 	];
 
 	public function testCalculateTotal() {
@@ -58,6 +71,25 @@ class KivaTest extends TestCase {
 
 	public function testDate() {
 
+		$filtered_loans = $this->getFilteredLoans();
+
+		foreach ($filtered_loans as $loan) {
+			$this->assertLessThan(strtotime($this->tomorrow_date), strtotime($loan['planned_expiration_date']));
+		}
+	}
+
+	public function testAmountRemaining() {
+		$filtered_loans = $this->getFilteredLoans();
+
+		//since the objects are fixed, just make sure that the calculations are correct manually
+
+		foreach ($filtered_loans as $i => $loan) {
+			$this->assertEquals($loan['loan_amount'] - $loan['funded_amount'], $this->amount_remaining[$i]);
+		}
+
+	}
+
+	public function getFilteredLoans() {
 		$filtered_loans = [];
 
 		foreach ($this->loans as $loan) {
@@ -66,11 +98,8 @@ class KivaTest extends TestCase {
 			}
 		}
 
-		foreach ($filtered_loans as $loan) {
-			$this->assertLessThan(strtotime($this->tomorrow_date), strtotime($loan['planned_expiration_date']));
-		}
+		return $filtered_loans;
 	}
-
 }
 
 
