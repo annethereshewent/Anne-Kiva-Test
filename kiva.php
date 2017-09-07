@@ -1,15 +1,6 @@
 <?php
-//first we need to do a curl call to the API and parse the json
-
-
-
-
-
 $loan_total = 0;
 //setlocale(LC_MONETARY, 'en_US.UTF-8');
-
-
-
 
 $curl = curl_init();
 
@@ -108,7 +99,7 @@ $result = json_decode(curl_exec($curl));
 	<?php foreach ($result->loans as $loan) {  ?>
 		<tr>
 			<td><a href="#" onclick="showLoan(<?= $loan->id ?>)"><?= $loan->name ?></a></td>
-			<td><?= date('F j Y', strtotime($loan->planned_expiration_date)) ?></td>
+			<td><?= date('F j Y h:i:s A', strtotime($loan->planned_expiration_date)) ?></td>
 			<td>$<?= money_format('%.2n', $loan->loan_amount) ?></td>
 		</tr>
 		<?php $loan_total += $loan->loan_amount; ?>
@@ -135,6 +126,7 @@ $result = json_decode(curl_exec($curl));
 </div>
 
 <script src="jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="http://www.datejs.com/build/date.js"></script>
 <script>
 	var loans;
 	var current_page=1;
@@ -174,6 +166,8 @@ $result = json_decode(curl_exec($curl));
 							tomorrow_date = new Date();
 							tomorrow_date.setDate(tomorrow_date.getDate() + 1);
 
+							console.log(tomorrow_date);
+
 
 							//don't do anything if the first result already has a time greater than tomorrow 
 							if (new Date(new_loans[0].planned_expiration_date).getTime() > tomorrow_date.getTime()) {
@@ -188,7 +182,7 @@ $result = json_decode(curl_exec($curl));
 							for (var i = 0; i < new_loans.length; i++) {
 								if (new Date(new_loans[i].planned_expiration_date).getTime() <= tomorrow_date.getTime()) {
 									//if the expiration date is within one day, then append it to the table
-									$(".loan-table").append("<tr><td><a href='#' onclick='showLoan(" + new_loans[i].id + ")'>" + new_loans[i].name + "</a></td><td>" + formatDate(new Date(new_loans[i].planned_expiration_date)) + "</td><td>$" + new_loans[i].loan_amount.toFixed(2) + "</td>");
+									$(".loan-table").append("<tr><td><a href='#' onclick='showLoan(" + new_loans[i].id + ")'>" + new_loans[i].name + "</a></td><td>" + new Date(new_loans[i].planned_expiration_date).toString("MMMM d yyyy hh:mm:ss tt") + "</td><td>$" + new_loans[i].loan_amount.toFixed(2) + "</td>");
 									total += parseInt(new_loans[i].loan_amount); 
 								}
 								else {
@@ -223,7 +217,7 @@ $result = json_decode(curl_exec($curl));
 			$("#country").text(loan.location.country);
 			$("#activity").text(loan.activity);
 			$("#loan_amount").text("$" + loan.loan_amount.toFixed(2));
-			$("#expiration_date").text(loan.planned_expiration_date);
+			$("#expiration_date").text(new Date(loan.planned_expiration_date).toString('MMMM d yyyy hh:mm:ss tt'));
 			$("#funded_amount").text("$" + loan.funded_amount.toFixed(2));
 
 			$("#amount_remaining").text("$" + (loan.loan_amount - loan.funded_amount).toFixed(2));
@@ -235,24 +229,6 @@ $result = json_decode(curl_exec($curl));
 		}
 	}
 
-	function formatDate(date) {
-		var months = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'
-		];
-
-		return months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear();
-	}
 	function getLoan(loan_id) {
 		for (var i = 0; i < loans.length; i++) {
 			if (loans[i].id == loan_id) {
