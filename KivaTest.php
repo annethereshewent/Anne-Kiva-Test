@@ -7,23 +7,23 @@ class KivaTest extends TestCase {
 	public $loans = [
 		[
 			'name'        => 'Shifaa',
-			'status' 	  => 'fundraising'
+			'status'      => 'fundraising'
 			'loan_amount' => 1025
 
 		], 
 		[
-			'name' 	  	  => 'Alice',
-			'status'	  => 'fundraising'
+			'name'        => 'Alice',
+			'status'      => 'fundraising'
 			'loan_amount' => 400
 		],
 		[
 			'name'        => "Dung's Group",
-			'status' 	  => 'fundraising'
+			'status'      => 'fundraising'
 			'loan_amount' => 2650
 		],
 		[
-			'name' 		  => 'Kaneez Bb',
-			'status' 	  => 'fundraising'
+			'name'        => 'Kaneez Bb',
+			'status'      => 'fundraising'
 			'loan_amount' => 475
 		]
 	];
