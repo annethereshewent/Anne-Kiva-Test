@@ -1,6 +1,7 @@
 <?php
 $loan_total = 0;
 //setlocale(LC_MONETARY, 'en_US.UTF-8');
+date_default_timezone_set('America/Los_Angeles');
 
 $curl = curl_init();
 
@@ -182,7 +183,7 @@ $result = json_decode(curl_exec($curl));
 							for (var i = 0; i < new_loans.length; i++) {
 								if (new Date(new_loans[i].planned_expiration_date).getTime() <= tomorrow_date.getTime()) {
 									//if the expiration date is within one day, then append it to the table
-									$(".loan-table").append("<tr><td><a href='#' onclick='showLoan(" + new_loans[i].id + ")'>" + new_loans[i].name + "</a></td><td>" + new Date(new_loans[i].planned_expiration_date).toString("MMMM d yyyy hh:mm:ss tt") + "</td><td>$" + new_loans[i].loan_amount.toFixed(2) + "</td>");
+									$(".loan-table").append("<tr><td><a href='#' onclick='showLoan(" + new_loans[i].id + ")'>" + new_loans[i].name + "</a></td><td>" + new Date(new_loans[i].planned_expiration_date).setTimezone('PDT').toString("MMMM d yyyy hh:mm:ss tt") + "</td><td>$" + new_loans[i].loan_amount.toFixed(2) + "</td>");
 									total += parseInt(new_loans[i].loan_amount); 
 								}
 								else {
@@ -217,7 +218,7 @@ $result = json_decode(curl_exec($curl));
 			$("#country").text(loan.location.country);
 			$("#activity").text(loan.activity);
 			$("#loan_amount").text("$" + loan.loan_amount.toFixed(2));
-			$("#expiration_date").text(new Date(loan.planned_expiration_date).toString('MMMM d yyyy hh:mm:ss tt'));
+			$("#expiration_date").text(new Date(loan.planned_expiration_date).setTimezone('PDT').toString('MMMM d yyyy hh:mm:ss tt'));
 			$("#funded_amount").text("$" + loan.funded_amount.toFixed(2));
 
 			$("#amount_remaining").text("$" + (loan.loan_amount - loan.funded_amount).toFixed(2));
