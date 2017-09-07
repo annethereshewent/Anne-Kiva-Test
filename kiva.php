@@ -6,7 +6,7 @@ date_default_timezone_set('America/Los_Angeles');
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-	CURLOPT_URL 			=> 'http://api.kivaws.org/v1/loans/search.json?status=fundraising&per_page=50&sort_by=expiration&page=1',
+	CURLOPT_URL 			=> 'http://api.kivaws.org/v1/loans/search.json?status=fundraising&per_page=40&sort_by=expiration&page=1',
 	CURLOPT_RETURNTRANSFER  => 1,
 ]);
 
@@ -18,6 +18,7 @@ $result = json_decode(curl_exec($curl));
 	<style>
 		body {
 			background: #cc99ff;
+			font-family: 'Cambria';
 		}
 		h1 {
 			font-family: Cambria;
@@ -153,7 +154,7 @@ $result = json_decode(curl_exec($curl));
 					loading = true;
 					$('.loading').show();
 					$.get(
-						'http://api.kivaws.org/v1/loans/search.json?status=fundraising&expiring_soon=true&per_page=50&sort_by=expiration&page=' + (current_page+1),
+						'http://api.kivaws.org/v1/loans/search.json?status=fundraising&expiring_soon=true&per_page=40&sort_by=expiration&page=' + (current_page+1),
 						function(data) {
 							console.log(data);
 
