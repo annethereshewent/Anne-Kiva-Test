@@ -25,7 +25,7 @@ $result = json_decode(curl_exec($curl));
 			text-align: center;
 		}
 		.loan-table {
-			margin-left:100px;
+			margin-left:300px;
 			border: 1px solid black;
 			border-collapse: collapse;
 		}
@@ -56,7 +56,7 @@ $result = json_decode(curl_exec($curl));
     		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 		}
 		.modal-content {
-			margin-left: 100px;
+			margin-left: 300px;
 			margin-top: 60px;
 			background: #cc99ff;
 			border-radius: 2px;
