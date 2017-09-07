@@ -214,8 +214,9 @@ foreach ($loans as $i => $loan) {
 										total += parseInt(new_loans[i].loan_amount); 
 									}
 									else {
-										//remove this element from new loans since its date is later than 24 hours
-										new_loans.splice(i,1);
+										//remove this element and all further elements since they all have expiration dates greater than 24 hours
+										new_loans.splice(i);
+										break;
 									}
 								}
 
