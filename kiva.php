@@ -95,6 +95,17 @@ foreach ($loans as $i => $loan) {
 			font-style: italic;
 			font-size: 14px;
 		}
+		#tags-list {
+			list-style-type: none;
+			margin-left: 0px;
+		}
+		#tags-list li {
+			display: inline;
+			color: grey;
+			font-size: 12px;
+			margin-left:0;
+			margin-right:5px;
+		}
 	</style>
 </head>
 <body>
@@ -128,10 +139,16 @@ foreach ($loans as $i => $loan) {
 			<h1>Loan Info for <span id="name"></span></h1>
 			<p><label>Country:</label> <span id="country"></span></p>
 			<p><label>Activity:</label> <span id="activity"></span></p>
+			<p><label>Sector:</label> <span id="sector"></span></p>
+			<p><label>Purpose:</label> <span id="purpose"></span></p>
 			<p><label>Loan Amount:</label> <span id="loan_amount"></span></p>
+			<p><label>Posted Date:</label> <span id="posted_date"></span></p>
 			<p><label>Planned Expiration Date:</label> <span id="expiration_date"></span></p>
 			<p><label>Funded Amount:</label> <span id="funded_amount"></span></p>
 			<p><label>Amount Remaining:</label> <span id="amount_remaining"></span></p>
+			<div class="tags">
+				<ul id="tags-list"></ul>
+			</div>
 		</div>
 	</div>
 
@@ -148,11 +165,13 @@ foreach ($loans as $i => $loan) {
 
 			$('.modal').click(function (event) {
 			   	if (!$(event.target).closest('.modal-content').length && !$(event.target).is('.modal-content')) {
+			   		$("#tags-list").html('');
 	   				$(".modal").hide();
 			   	}     
 			});
 
 			$('.close-button').click(function() {
+				$("#tags-list").html('');
 				$(".modal").hide();
 			})
 			$(window).scroll(function() {
@@ -164,8 +183,6 @@ foreach ($loans as $i => $loan) {
 						$.get(
 							'http://api.kivaws.org/v1/loans/search.json?status=fundraising&expiring_soon=true&per_page=40&sort_by=expiration&page=' + (current_page+1),
 							function(data) {
-								console.log(data);
-
 								var total = parseInt($("#loan-total").text().substring(1));
 								console.log(total);
 
@@ -223,14 +240,22 @@ foreach ($loans as $i => $loan) {
 			loan = getLoan(loan_id);
 
 			if (loan) {
+				console.log(loan);
 				$("#name").text(loan.name);
 				$("#country").text(loan.location.country);
 				$("#activity").text(loan.activity);
 				$("#loan_amount").text("$" + loan.loan_amount.toFixed(2));
 				$("#expiration_date").text(new Date(loan.planned_expiration_date).setTimezone('PDT').toString('MMMM d yyyy hh:mm:ss tt'));
 				$("#funded_amount").text("$" + loan.funded_amount.toFixed(2));
-
+				$("#sector").text(loan.sector);
+				$("#purpose").text(loan.use);
+				$("#posted_date").text(new Date(loan.posted_date).setTimezone('PDT').toString('MMMM d yyyy hh:mm:ss tt'))
 				$("#amount_remaining").text("$" + (loan.loan_amount - loan.funded_amount).toFixed(2));
+				
+
+				for (var i = 0; i < loan.tags.length; i++) {
+					$("#tags-list").append('<li>' + loan.tags[i].name + '</li>');
+				}
 
 				$(".modal").show();
 			}
