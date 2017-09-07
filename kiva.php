@@ -6,7 +6,7 @@ date_default_timezone_set('America/Los_Angeles');
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-	CURLOPT_URL 			=> 'http://api.kivaws.org/v1/loans/search.json?status=fundraising&expiring_soon=true&per_page=50&sort_by=expiration&page=1',
+	CURLOPT_URL 			=> 'http://api.kivaws.org/v1/loans/search.json?status=fundraising&per_page=50&sort_by=expiration&page=1',
 	CURLOPT_RETURNTRANSFER  => 1,
 ]);
 
