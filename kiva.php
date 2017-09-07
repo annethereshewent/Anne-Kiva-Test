@@ -11,7 +11,16 @@ curl_setopt_array($curl, [
 ]);
 
 
-$result = json_decode(curl_exec($curl));
+$loans = json_decode(curl_exec($curl))->loans;
+
+$tomorrow_date = strtotime('tomorrow');
+
+foreach ($loans as $i => $loan) {
+	//check the dates, remove element if the expiration date is greater than 24 hours
+	if (strtotime($loan->planned_expiration_date) > $tomorrow_date) {
+		array_splice($loans, $i, 1);
+	}
+}
 
 ?>
 <head>
@@ -98,7 +107,7 @@ $result = json_decode(curl_exec($curl));
 		<th>Planned Expiration Date</th>
 		<th>Loan Amount</th>
 	</tr>
-	<?php foreach ($result->loans as $loan) {  ?>
+	<?php foreach ($loans as $loan) {  ?>
 		<tr>
 			<td><a href="#" onclick="showLoan(<?= $loan->id ?>)"><?= $loan->name ?></a></td>
 			<td><?= date('F j Y h:i:s A', strtotime($loan->planned_expiration_date)) ?></td>
@@ -136,7 +145,7 @@ $result = json_decode(curl_exec($curl));
 
 	$(function() {
 		//this way we can easily iterate through the loans if need be
-		loans = <?= json_encode($result->loans) ?>
+		loans = <?= json_encode($loans) ?>
 
 		$('.modal').click(function (event) {
 		   	if (!$(event.target).closest('.modal-content').length && !$(event.target).is('.modal-content')) {
