@@ -9,15 +9,16 @@ curl_setopt_array($curl, [
 	CURLOPT_RETURNTRANSFER  => 1,
 ]);
 
-
 $loans = json_decode(curl_exec($curl))->loans;
 
-$tomorrow_date = strtotime('tomorrow');
+$tomorrow_date = strtotime('+24 hours');
 
 foreach ($loans as $i => $loan) {
-	//check the dates, remove element if the expiration date is greater than 24 hours
+	//check the dates, filter out all the elements that have an expiration date greater than 24 hours
 	if (strtotime($loan->planned_expiration_date) > $tomorrow_date) {
-		array_splice($loans, $i, 1);
+		//since the elements are sorted by expiration, we can remove the first element with a time greater than 24 hours and all elements after that
+		array_splice($loans, $i); 		
+		break;
 	}
 }
 ?>
@@ -29,7 +30,7 @@ foreach ($loans as $i => $loan) {
 			font-family: 'Cambria';
 		}
 		h1 {
-			font-family: Cambria;
+			font-family: 'Cambria';
 			color: #800000;
 			text-align: center;
 		}
@@ -91,7 +92,7 @@ foreach ($loans as $i => $loan) {
 		}
 		h3 {
 			text-align: center;
-			font-family: Cambria;
+			font-family: 'Cambria';
 			font-style: italic;
 			font-size: 14px;
 		}
